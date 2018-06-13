@@ -28,6 +28,20 @@ func (r *DefaultRuleRenderer) NATOutgoingChain(natOutgoingActive bool, ipVersion
 		masqIPsSetName := ipConf.NameForMainIPSet(IPSetIDNATOutgoingMasqPools)
 		rules = []iptables.Rule{
 			{
+				Action: iptables.MasqAction{ToPorts: "32768-65000"},
+				Match: iptables.Match().
+					SourceIPSet(masqIPsSetName).
+					NotDestIPSet(allIPsSetName).
+					Protocol("udp"),
+			},
+			{
+				Action: iptables.MasqAction{ToPorts: "32768-65000"},
+				Match: iptables.Match().
+					SourceIPSet(masqIPsSetName).
+					NotDestIPSet(allIPsSetName).
+					Protocol("tcp"),
+			},
+			{
 				Action: iptables.MasqAction{},
 				Match: iptables.Match().
 					SourceIPSet(masqIPsSetName).
